@@ -1,2 +1,2 @@
 # RealTimeSolarSystemProject
-A real time model of the bodies in our solar system written in C
+A real time model of the planetary bodies in our solar system written in C

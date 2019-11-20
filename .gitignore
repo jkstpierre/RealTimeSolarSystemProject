@@ -13,3 +13,4 @@ CTestTestfile.cmake
 # Project Specific Ignores
 /bin
 *.code-workspace
+/build
