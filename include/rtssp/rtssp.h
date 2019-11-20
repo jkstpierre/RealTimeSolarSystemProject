@@ -12,6 +12,7 @@
 #ifndef _RTSSP_H_
 #define _RTSSP_H_
 
+
 // INCLUDES //
 
 #include <stdio.h>
@@ -50,7 +51,7 @@ extern bool is_running;
  * @param error_code  The GLFW error code
  * @param message     The error string
  */
-extern void process_error(int error_code, const char *message);
+extern void processError(int error_code, const char *message);
 
 /**
  * @brief Process input from the window. This function is registered with GLFW and called from it.
@@ -61,7 +62,7 @@ extern void process_error(int error_code, const char *message);
  * @param action    The type of event
  * @param mods      The modifiers to the event
  */
-extern void process_input(GLFWwindow *window, int key, int scancode, int action, int mods);
+extern void processInput(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 
 

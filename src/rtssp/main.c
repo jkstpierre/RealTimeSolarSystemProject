@@ -9,12 +9,14 @@
  * 
  */
 
+
 // INCLUDES //
 
 #include "rtssp/rtssp.h"
+#include "rtssp/graphics.h"
 
 
-// VARIABLES 
+// VARIABLES // 
 
 bool is_running = true;   // Program is running by default
 
@@ -68,8 +70,8 @@ int main(int argc, char **args) {
   }
 
   // Setup function callbacks
-  glfwSetErrorCallback(process_error);        // Error callback
-  glfwSetKeyCallback(window, process_input);  // Input callback
+  glfwSetErrorCallback(processError);        // Error callback
+  glfwSetKeyCallback(window, processInput);  // Input callback
   
 
   // Application loop
@@ -90,12 +92,12 @@ int main(int argc, char **args) {
   return 0;
 }
 
-void process_error(int error_code, const char *message) {
+void processError(int error_code, const char *message) {
   fprintf(stdin, "Error:\nCode: %d\nMessage: %s\n", error_code, message);
   exit(EXIT_FAILURE);
 }
 
-void process_input(GLFWwindow *window, int key, int scancode, int action, int mods) {
+void processInput(GLFWwindow *window, int key, int scancode, int action, int mods) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     // User has pressed the escape key and wishes to exit program
     is_running = false;

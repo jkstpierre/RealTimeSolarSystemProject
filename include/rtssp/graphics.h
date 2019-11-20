@@ -1,7 +1,7 @@
 /**
  * @file graphics.h
  * @author Joseph St. Pierre
- * @brief 
+ * @brief This file contains the 
  * @version 0.1
  * @date 2019-11-20
  * 
@@ -12,16 +12,28 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
+
 // INCLUDES //
 
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
+
 // STRUCTS //
 
 /**
- * @brief A mesh_t contains all the data required for drawing a piece of geometry using
- * OpenGL
+ * @brief A vertex_t contains all the data pertaining to a vertex in 3D space
+ * 
+ */
+typedef struct {
+  vec3 position;    // The position of the vertex in cartesian space
+  vec3 normal;      // The normal vector for the vertex
+  vec2 uv;          // The uv coordinates for texture mapping
+} vertex_t;
+
+/**
+ * @brief A mesh_t contains all the data required to describe an arbitrary
+ * piece of geometry
  * 
  */
 typedef struct {
@@ -33,11 +45,41 @@ typedef struct {
 } mesh_t;
 
 /**
- * @brief 
- * 
+ * @brief A renderable_t points contains everything required to draw
+ * a piece of geometry at a certain position and texture
  */
 typedef struct {
-
+  mesh_t mesh;          // The mesh for the renderable
+  mat4 model_matrix;    // The model matrix for the renderable
+  GLuint texture;       // The texture of the renderable
 } renderable_t;
+
+
+// DATA //
+
+
+
+
+// FUNCTIONS //
+
+// MESH FUNCTIONS //
+
+/**
+ * @brief Build a mesh_t object in the shape of a sphere with given radius, sectors,
+ * and stacks
+ * 
+ * @param radius    The radius of the sphere
+ * @param sectors   The number of horizontal strips along the side of the sphere
+ * @param stacks    The number of vertical strips from the top pole to the bottom pole
+ * @return mesh_t 
+ */
+extern mesh_t buildSphereMesh(GLfloat radius, GLuint sectors, GLuint stacks);
+
+/**
+ * @brief Free the memory for a mesh_t object, removing the data from VRAM.
+ * 
+ * @param mesh 
+ */
+extern void freeMesh(mesh_t *mesh);
 
 #endif
