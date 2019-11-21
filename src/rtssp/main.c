@@ -69,20 +69,38 @@ int main(int argc, char **args) {
     exit(EXIT_FAILURE); // Indicate failure
   }
 
+  // Disable vertical sync
+  glfwSwapInterval(0);
+
   // Setup function callbacks
   glfwSetErrorCallback(processError);        // Error callback
   glfwSetKeyCallback(window, processInput);  // Input callback
   
+  float delta_time = 1.0f / DEFAULT_PHYS_TICKS_PER_SECOND;  // The delta time between phys steps
+  float prev_time = glfwGetTime();    // Get the time in seconds
+  float accumulator = 0.0f; // Accumulator for keeping phys steps and draw calls in sync
 
   // Application loop
   while (!glfwWindowShouldClose(window) && is_running) {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // Set the clear color to black
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer and depth buffer
+    // Compute the current time
+    float curr_time = glfwGetTime();  // Get time in seconds
+    float frame_time = (curr_time - prev_time); // Compute frame time
+    if (frame_time > 0.25)
+      frame_time = 0.25;  // Cap the frame time
 
+    prev_time = curr_time;  // Update the previous time
+    accumulator += frame_time;
+    while (accumulator >= delta_time) {
+      updateScene(delta_time);  // Update the scene with the calculated delta time
+      accumulator -= delta_time;
+    }
+    
+    // Compute alpha and draw scene using interpolation
+    float alpha = accumulator / delta_time;
+    drawScene(alpha);
 
-
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+    glfwSwapBuffers(window);  // Update the window with the default framebuffer's contents
+    glfwPollEvents();   // Poll for user events
   }
 
   // CLEAN UP //
@@ -102,4 +120,15 @@ void processInput(GLFWwindow *window, int key, int scancode, int action, int mod
     // User has pressed the escape key and wishes to exit program
     is_running = false;
   }
+}
+
+void updateScene(float dt) {
+
+}
+
+void drawScene(float alpha) {
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // Set the clear color to black
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer and depth buffer
+
+  
 }

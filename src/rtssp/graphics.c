@@ -22,7 +22,7 @@
 mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors) {
   // Assert the inputs are in range
   assert(sectors >= 2);
-  assert(stacks > 0);
+  assert(stacks >= 3);
   assert(radius > 0.0f);
 
   // Fields
