@@ -65,15 +65,15 @@ typedef struct {
 // MESH FUNCTIONS //
 
 /**
- * @brief Build a mesh_t object in the shape of a sphere with given radius, sectors,
- * and stacks
+ * @brief Build a mesh_t object in the shape of a sphere with given radius, stacks,
+ * and sectors
  * 
  * @param radius    The radius of the sphere
- * @param sectors   The number of horizontal strips along the side of the sphere
  * @param stacks    The number of vertical strips from the top pole to the bottom pole
+ * @param sectors   The number of horizontal strips along the side of the sphere
  * @return mesh_t 
  */
-extern mesh_t buildSphereMesh(GLfloat radius, GLuint sectors, GLuint stacks);
+extern mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors);
 
 /**
  * @brief Free the memory for a mesh_t object, removing the data from VRAM.
