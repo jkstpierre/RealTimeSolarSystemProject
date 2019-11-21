@@ -150,6 +150,20 @@ mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors) {
   return sphere;  // Return the sphere created
 }
 
+mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions) {
+  // Fields
+  mesh_t icosphere;
+  
+  /**
+   * @brief This code for sphere construction is courtesy of Song Ho Ahn and at the time
+   * of writing this program can be found and explained here: http://www.songho.ca/opengl/gl_sphere.html
+   * Aside from some minor changes, the code here is identical to it.
+   */
+  
+
+  return icosphere; // Return the icosphere created
+}
+
 void freeMesh(mesh_t *mesh) {
   // If pointer is valid
   if (mesh) {

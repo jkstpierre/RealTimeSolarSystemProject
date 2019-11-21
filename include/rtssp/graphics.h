@@ -76,6 +76,15 @@ typedef struct {
 extern mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors);
 
 /**
+ * @brief Build a mesh_t object in the shape of an icosphere with given radius and subdivisions
+ * 
+ * @param radius        The radius of the icosphere
+ * @param subdivisions  The number of subdivisions
+ * @return mesh_t       A mesh_t object containing the icosphere geometry
+ */
+extern mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions);
+
+/**
  * @brief Free the memory for a mesh_t object, removing the data from VRAM.
  * 
  * @param mesh 
