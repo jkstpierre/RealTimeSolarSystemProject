@@ -15,6 +15,18 @@
 #include <glad/glad.h>
 #include "rtssp/scene.h"
 
+
+// DATA //
+
+
+
+
+// FUNCTIONS //
+
+void initScene(void) {
+
+}
+
 void updateScene(float dt) {
   /**
    * @brief TODO: 
@@ -30,4 +42,8 @@ void drawScene(float alpha) {
    * @brief TODO: 
    * 
    */
+}
+
+void freeScene(void) {
+
 }

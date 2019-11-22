@@ -164,8 +164,10 @@ mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions) {
   const float H_ANGLE = GLM_PIf / 180.0f * 72.0f;   // 72 degrees
   const float V_ANGLE = atanf(1.0f / 2.0f);         // Elevation = 26.565 degrees
 
-   
-  
+  /*
+    TODO: Figure out how to create an Icosphere in C.
+  */ 
+
 
   return icosphere; // Return the icosphere created
 }

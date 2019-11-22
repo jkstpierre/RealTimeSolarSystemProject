@@ -77,6 +77,13 @@ int main(int argc, char **args) {
   glfwSetErrorCallback(processError);        // Error callback
   glfwSetKeyCallback(window, processInput);  // Input callback
   
+  // Initialize the scene
+  initScene();
+
+  /**
+   * @brief Variables for frame timing
+   * 
+   */
   float delta_time = 1.0f / DEFAULT_PHYS_TICKS_PER_SECOND;  // The delta time between phys steps
   float prev_time = glfwGetTime();    // Get the time in seconds
   float accumulator = 0.0f; // Accumulator for keeping phys steps and draw calls in sync
@@ -105,6 +112,8 @@ int main(int argc, char **args) {
   }
 
   // CLEAN UP //
+
+  freeScene();      // Free the scene assets
 
   glfwTerminate();  // Shutdown glfw
 

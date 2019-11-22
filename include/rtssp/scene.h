@@ -15,8 +15,21 @@
 
 // INCLUDES //
 
+#include <glad/glad.h>
+
+
+// DATA //
+
+extern GLuint vao;
+
 
 // FUNCTIONS //
+
+/**
+ * @brief Initialize the scene
+ * 
+ */
+extern void initScene(void);
 
 /**
  * @brief Update the scene using delta time
@@ -31,5 +44,11 @@ extern void updateScene(float dt);
  * @param alpha 
  */
 extern void drawScene(float alpha);
+
+/**
+ * @brief Free the resources for the scene
+ * 
+ */
+extern void freeScene(void);
 
 #endif
