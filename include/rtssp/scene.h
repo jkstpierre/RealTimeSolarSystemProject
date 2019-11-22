@@ -15,12 +15,12 @@
 
 // INCLUDES //
 
-#include <glad/glad.h>
+#include "rtssp/graphics.h"
 
 
 // DATA //
 
-extern GLuint vao;
+extern GLuint vao;    // The scene vertex array object
 
 
 // FUNCTIONS //

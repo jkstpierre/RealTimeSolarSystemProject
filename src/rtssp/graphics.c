@@ -13,11 +13,144 @@
 // INCLUDES //
 
 #include "rtssp/graphics.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
 #include <math.h>
 #include <assert.h>
 
 
 // FUNCTIONS //
+
+// SHADER FUNCTIONS //
+
+GLuint compileShader(const char *shader_path, GLenum type) {
+  assert(shader_path);  // Shader path must not be null
+
+  // Fields
+  GLuint shader;    // The shader to be compiled
+
+  
+
+  return shader;    // Return the shader
+}
+
+GLuint compileAndLinkShaderPrograms(
+  const char *vertex_shader_path, const char *fragment_shader_path, const char *geometry_shader_path) {
+  // Assertions
+  assert(vertex_shader_path && fragment_shader_path);   // All programs need vertex and fragment shaders
+
+  // Constants
+  const int LOG_SIZE = 512;   // 512 bytes for logs
+
+  // OpenGL fields 
+  GLuint shader;  // The shader program to return
+  GLuint vertex, fragment, geometry;  // The vertex, fragment, and geometry shaders
+  GLint success;  // Success flag
+  GLchar error_log[LOG_SIZE];  // Allocate LOG_SIZE bytes for error logging
+  // C File I/O fields
+  FILE *file = NULL;      // The file pointer for loading and compiling shaders
+  char *buffer = NULL;     // The buffer to be filled with the text of the source files
+  long length;          // The length of a file in characters
+ 
+
+  /**
+   * @brief Here we load and compile the shader programs from disk
+   * 
+   */
+
+  // VERTEX SHADER //
+  file = fopen(vertex_shader_path, "r");
+  assert(file); // If vertex_shader_path isn't valid, terminate program
+
+  // Find out how big the file is
+  fseek(file, 0, SEEK_END);
+  length = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  buffer = malloc(length);
+ 
+  // Read data into buffer
+  fread(buffer, 1, length, file);
+
+  // Close the file
+  fclose(file);
+
+  // Build vertex shader program
+  vertex = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertex, 1, &buffer, NULL);
+  glCompileShader(vertex);
+
+  // Check for errors
+  glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(vertex, LOG_SIZE, NULL, error_log);
+
+    fprintf(stderr, "Vertex shader failed to compile. Error: %s\n", error_log);
+
+    glDeleteShader(vertex);
+    exit(EXIT_FAILURE);   // Terminate program
+  }
+
+  // FRAGMENT SHADER //
+  file = fopen(fragment_shader_path, "r");
+  assert(file);
+
+
+
+  /**
+   * @brief Here we link the shaders into a single program
+   * 
+   */
+
+  return shader;  // Return the shader
+}
+
+// TEXTURE FUNCTIONS //
+
+texture_t createTexture2DFromImage(
+  const char *filepath, GLint wrap_s, GLint wrap_t, GLint min_filter, GLint mag_filter) {
+  // Fields
+  texture_t texture;  // The texture to be built
+
+  // Enable vertical flipping
+  stbi_set_flip_vertically_on_load(1);
+  
+  // Load the image from disk and get bytes
+  unsigned char *data = stbi_load(filepath, &texture.width, &texture.height, &texture.channels, 0);
+  assert(data);   // Break the program if an image fails to load (bad practice I know)
+
+  // Build a new texture and set it up with OpenGL
+  glGenTextures(1, &texture.id);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture.id);   
+
+  // Set the horizontal and vertical wrapping mode
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+
+  // Set minification and magnification filter parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+
+  // Get the mode 
+  GLint mode = GL_RGB;
+  if (texture.channels == 4)
+    mode = GL_RGBA;
+
+  // Send the data to OpenGL
+  glTexImage2D(GL_TEXTURE_2D, 0, mode, texture.width, texture.height, 0, mode, GL_UNSIGNED_BYTE, data);
+
+  // Generate mip maps
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  // Unbind the texture from tex unit 0 (technically not required but makes me rest easy)
+  glBindTexture(GL_TEXTURE_2D, GL_NONE);
+
+  return texture;   // Return the loaded texture
+}
+
+// MESH FUNCTIONS //
 
 mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors) {
   // Assert the inputs are in range
@@ -42,10 +175,8 @@ mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors) {
   // Allocate memory for the element array
   element_array = (GLuint *)malloc(sizeof(GLuint) * sphere.element_count);
 
-  // Create a new VBO for the mesh
+  // Create a new VBO and EBO for the mesh
   glGenBuffers(1, &(sphere.vbo));
-
-  // Create a new EBO for the mesh
   glGenBuffers(1, &(sphere.ebo));
 
   // Set the draw mode of the mesh

@@ -32,6 +32,17 @@ typedef struct {
 } vertex_t;
 
 /**
+ * @brief A texture_t contains all the relevant data to a texture in VRAM
+ * 
+ */
+typedef struct {
+  GLuint id;        // The texture id
+  GLsizei width;    // The width of the texture   (in pixels)
+  GLsizei height;   // The height of the texture  (in pixels)
+  GLsizei channels; // The number of bytes per pixel (1-4)
+} texture_t;
+
+/**
  * @brief A mesh_t contains all the data required to describe an arbitrary
  * piece of geometry
  * 
@@ -51,7 +62,7 @@ typedef struct {
 typedef struct {
   mesh_t mesh;          // The mesh for the renderable
   mat4 model_matrix;    // The model matrix for the renderable
-  GLuint texture;       // The texture of the renderable
+  texture_t texture;    // The texture of the renderable
 } renderable_t;
 
 
@@ -61,6 +72,43 @@ typedef struct {
 
 
 // FUNCTIONS //
+
+// SHADER FUNCTIONS //
+
+/**
+ * @brief Compiles a shader program from disk and returns a handle to it
+ * 
+ * @param shader_path   Path to the shader program on disk
+ * @param type          The type of shader to compile
+ * @return GLuint       Handle to the shader
+ */
+extern GLuint compileShader(const char *shader_path, GLenum type);
+
+/**
+ * @brief Compile and links a usable shader program
+ * 
+ * @param vertex_shader_path    Path to the vertex shader program on disk
+ * @param fragment_shader_path  Path to the fragment shader program on disk
+ * @param geometry_shader_path  Path to the optional geometry shader program on disk
+ * @return GLuint   The id of the shader program
+ */
+extern GLuint compileAndLinkShaderPrograms(
+  const char *vertex_shader_path, const char *fragment_shader_path, const char *geometry_shader_path);
+
+// TEXTURE FUNCTIONS //
+
+/**
+ * @brief Create a Texture2D From Image object
+ * 
+ * @param filepath 
+ * @param wrap_s 
+ * @param wrap_t 
+ * @param min_filter 
+ * @param mag_filter 
+ * @return texture_t 
+ */
+extern texture_t createTexture2DFromImage(
+  const char *filepath, GLint wrap_s, GLint wrap_t, GLint min_filter, GLint mag_filter);
 
 // MESH FUNCTIONS //
 
@@ -90,5 +138,9 @@ extern mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions);
  * @param mesh 
  */
 extern void freeMesh(mesh_t *mesh);
+
+// RENDERABLE FUNCTIONS //
+
+
 
 #endif
