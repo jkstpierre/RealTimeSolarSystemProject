@@ -32,8 +32,34 @@ GLuint compileShader(const char *shader_path, GLenum type) {
 
   // Fields
   GLuint shader;    // The shader to be compiled
+  GLint success;    // Success flag
+  GLchar error_log[512];  // Allocate 512 bytes for error logs
+  FILE *file = NULL;  // The file pointer for loading the shader code from disk
+  char *buffer = NULL;  // The buffer to be filled with the text of the source files
+  long length;  // The length of the buffer
 
+  /**
+   * @brief Here we load and compile the shader
+   * 
+   */
 
+  // SHADER //
+  file = fopen(shader_path, "r");  // The path to the shader
+  assert(file); // Ensure file loaded properly
+
+  // Find out how big the file is
+  fseek(file, 0, SEEK_END);
+  length = ftell(file); // Get the length of the file 
+  fseek(file, 0, SEEK_SET);
+  buffer = (char *)malloc(sizeof(char) * length);   // Allocate bytes for the buffer
+
+  // Read data into buffer
+  fread(buffer, 1, length, file);
+
+  // Close the file
+  fclose(file);
+
+  
 
   return shader;    // Return the shader
 }
