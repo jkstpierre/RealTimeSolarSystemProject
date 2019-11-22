@@ -160,7 +160,11 @@ mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions) {
    * Aside from some minor changes, the code here is identical to it.
    */
 
-  
+  // Variables for Icosphere creation
+  const float H_ANGLE = GLM_PIf / 180.0f * 72.0f;   // 72 degrees
+  const float V_ANGLE = atanf(1.0f / 2.0f);         // Elevation = 26.565 degrees
+
+   
   
 
   return icosphere; // Return the icosphere created
