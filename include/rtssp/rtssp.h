@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef _RTSSP_H_
-#define _RTSSP_H_
+#ifndef _RTSSP_RTSSP_H_
+#define _RTSSP_RTSSP_H_
 
 
 // INCLUDES //
@@ -65,21 +65,5 @@ extern void processError(int error_code, const char *message);
  * @param mods      The modifiers to the event
  */
 extern void processInput(GLFWwindow *window, int key, int scancode, int action, int mods);
-
-// SCENE //
-
-/**
- * @brief Update the scene using delta time
- * 
- * @param dt 
- */
-extern void updateScene(float dt);
-
-/**
- * @brief Draw the scene to the screen using alpha interpolation
- * 
- * @param alpha 
- */
-extern void drawScene(float alpha);
 
 #endif

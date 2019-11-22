@@ -13,6 +13,7 @@
 // INCLUDES //
 
 #include "rtssp/rtssp.h"
+#include "rtssp/scene.h"
 #include "rtssp/graphics.h"
 
 
@@ -122,13 +123,3 @@ void processInput(GLFWwindow *window, int key, int scancode, int action, int mod
   }
 }
 
-void updateScene(float dt) {
-
-}
-
-void drawScene(float alpha) {
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // Set the clear color to black
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer and depth buffer
-
-  
-}

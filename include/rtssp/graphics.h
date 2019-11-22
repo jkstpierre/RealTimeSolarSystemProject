@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef _GRAPHICS_H_
-#define _GRAPHICS_H_
+#ifndef _RTSSP_GRAPHICS_H_
+#define _RTSSP_GRAPHICS_H_
 
 
 // INCLUDES //
