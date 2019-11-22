@@ -28,10 +28,13 @@
 GLuint compileShader(const char *shader_path, GLenum type) {
   assert(shader_path);  // Shader path must not be null
 
+  // Definitions
+  #define LOG_SIZE  512
+
   // Fields
   GLuint shader;    // The shader to be compiled
 
-  
+
 
   return shader;    // Return the shader
 }
