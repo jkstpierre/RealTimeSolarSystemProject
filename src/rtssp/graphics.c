@@ -159,6 +159,8 @@ mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions) {
    * of writing this program can be found and explained here: http://www.songho.ca/opengl/gl_sphere.html
    * Aside from some minor changes, the code here is identical to it.
    */
+
+  
   
 
   return icosphere; // Return the icosphere created

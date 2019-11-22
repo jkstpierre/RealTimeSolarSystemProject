@@ -28,3 +28,7 @@ target_include_directories (rtssp PRIVATE ${GLM_INCLUDE_DIRS})
 ## Find and link glfw
 find_package(glfw3 REQUIRED)
 target_link_libraries(rtssp glfw)
+## Link math library
+target_link_libraries(rtssp m)
+## Link dl library
+target_link_libraries(rtssp dl)
