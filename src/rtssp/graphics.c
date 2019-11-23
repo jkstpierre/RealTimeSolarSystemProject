@@ -21,19 +21,30 @@
 #include <assert.h>
 
 
+// DEFINITIONS //
+
+#define LOG_SIZE 512    // Allocate 512 bytes to logs
+
+
 // FUNCTIONS //
 
 // SHADER FUNCTIONS //
 
-GLuint compileShader(const char *shader_path, GLenum type) {
+/**
+ * @brief Local helper function for compiling a shader program
+ * 
+ * @param shader_path   Path to the shader program on disk
+ * @param type          The type of program to compile
+ * @return GLuint       Id of the shader
+ */
+static GLuint compileShader(const char *shader_path, GLenum type) {
+  // Assertions
   assert(shader_path);  // Shader path must not be null
-
-  // Definitions
 
   // Fields
   GLuint shader;    // The shader to be compiled
   GLint success;    // Success flag
-  GLchar error_log[512];  // Allocate 512 bytes for error logs
+  GLchar error_log[LOG_SIZE];  // Allocate log size bytes for error logs
   FILE *file = NULL;  // The file pointer for loading the shader code from disk
   char *buffer = NULL;  // The buffer to be filled with the text of the source files
   long length;  // The length of the buffer
@@ -43,7 +54,7 @@ GLuint compileShader(const char *shader_path, GLenum type) {
    * 
    */
 
-  // SHADER //
+  // FILE IO //
   file = fopen(shader_path, "r");  // The path to the shader
   assert(file); // Ensure file loaded properly
 
@@ -51,7 +62,7 @@ GLuint compileShader(const char *shader_path, GLenum type) {
   fseek(file, 0, SEEK_END);
   length = ftell(file); // Get the length of the file 
   fseek(file, 0, SEEK_SET);
-  buffer = (char *)malloc(sizeof(char) * length);   // Allocate bytes for the buffer
+  buffer = (char *)malloc(sizeof(char) * (length + 1));   // Allocate bytes for the buffer plus null terminator '\0'
 
   // Read data into buffer
   fread(buffer, 1, length, file);
@@ -59,79 +70,76 @@ GLuint compileShader(const char *shader_path, GLenum type) {
   // Close the file
   fclose(file);
 
-  
+  buffer[length] = '\0';  // Add the null terminator
+
+  // SHADER //
+
+  // Build requested shader program
+  shader = glCreateShader(type);
+  glShaderSource(shader, 1, &buffer, NULL);
+  glCompileShader(shader);
+
+  free(buffer); // Free the buffer since we no longer need it
+
+  // Check for errors
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(shader, LOG_SIZE, NULL, error_log);
+
+    fprintf(stderr, "Shader program failed to compile. Error: %s\n", error_log);
+    exit(EXIT_FAILURE);   // Terminate program
+  }
 
   return shader;    // Return the shader
 }
 
-GLuint compileAndLinkShaderPrograms(
-  const char *vertex_shader_path, const char *fragment_shader_path, const char *geometry_shader_path) {
+GLuint compileAndLinkShaderProgram(const char *vertex_shader_path, const char *fragment_shader_path) {
   // Assertions
   assert(vertex_shader_path && fragment_shader_path);   // All programs need vertex and fragment shaders
 
-  // Constants
-  const int LOG_SIZE = 512;   // 512 bytes for logs
-
   // OpenGL fields 
-  GLuint shader;  // The shader program to return
-  GLuint vertex, fragment, geometry;  // The vertex, fragment, and geometry shaders
+  GLuint program;  // The shader program to return
+  GLuint vertex, fragment;  // The vertex and fragment shaders
   GLint success;  // Success flag
   GLchar error_log[LOG_SIZE];  // Allocate LOG_SIZE bytes for error logging
-  // C File I/O fields
-  FILE *file = NULL;      // The file pointer for loading and compiling shaders
-  char *buffer = NULL;     // The buffer to be filled with the text of the source files
-  long length;          // The length of a file in characters
- 
 
-  /**
-   * @brief Here we load and compile the shader programs from disk
-   * 
-   */
+  // Load and compile the vertex and fragment shaders from disk
+  vertex = compileShader(vertex_shader_path, GL_VERTEX_SHADER);   // Compile the vertex shader
+  fragment = compileShader(fragment_shader_path, GL_FRAGMENT_SHADER);   // Compile the fragment shader
 
-  // VERTEX SHADER //
-  file = fopen(vertex_shader_path, "r");
-  assert(file); // If vertex_shader_path isn't valid, terminate program
+  // Create a program and link the shaders
+  program = glCreateProgram();
+  glAttachShader(program, vertex);    // Attach the vertex shader
+  glAttachShader(program, fragment);  // Attach the fragment shader
 
-  // Find out how big the file is
-  fseek(file, 0, SEEK_END);
-  length = ftell(file);
-  fseek(file, 0, SEEK_SET);
-  buffer = malloc(length);
- 
-  // Read data into buffer
-  fread(buffer, 1, length, file);
+  glLinkProgram(program); // Link the vertex and fragment shaders
 
-  // Close the file
-  fclose(file);
-
-  // Build vertex shader program
-  vertex = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertex, 1, &buffer, NULL);
-  glCompileShader(vertex);
-
-  // Check for errors
-  glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+  // Check for linker error
+  glGetShaderiv(program, GL_LINK_STATUS, &success);
   if (!success) {
-    glGetShaderInfoLog(vertex, LOG_SIZE, NULL, error_log);
+    glGetShaderInfoLog(program, LOG_SIZE, NULL, error_log);   // Get the error
 
-    fprintf(stderr, "Vertex shader failed to compile. Error: %s\n", error_log);
-
-    glDeleteShader(vertex);
+    fprintf(stderr, "Failed to link shaders! Error: %s\n", error_log);
     exit(EXIT_FAILURE);   // Terminate program
   }
 
-  // FRAGMENT SHADER //
-  file = fopen(fragment_shader_path, "r");
-  assert(file);
+  // Detach the shaders so they can be deleted
+  glDetachShader(program, vertex);
+  glDetachShader(program, fragment);
 
+  // Delete the shaders since we have our program now
+  glDeleteShader(vertex);
+  glDeleteShader(fragment);
 
+  return program;  // Return the compiled and linked program
+}
 
-  /**
-   * @brief Here we link the shaders into a single program
-   * 
-   */
+void setUniformVec4(GLuint program, const char *uniform_name, vec4 vector) {
+  glUniform4fv(glGetUniformLocation(program, uniform_name), 1, vector);
+}
 
-  return shader;  // Return the shader
+void setUniformMat4(GLuint program, const char *uniform_name, mat4 matrix) {
+  glUniformMatrix4fv(glGetUniformLocation(program, uniform_name), 1, GL_FALSE, (GLfloat *)matrix);
 }
 
 // TEXTURE FUNCTIONS //
@@ -344,4 +352,32 @@ void freeMesh(mesh_t *mesh) {
     mesh->element_count = 0;
     mesh->vertex_count = 0;
   }
+}
+
+// RENDERABLE FUNCTIONS //
+
+// CAMERA FUNCTIONS //
+
+camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 position, vec3 at, vec3 up) {
+  camera_t camera;  // The camera to build
+
+  // Set projection matrix parameters
+  camera.proj_fields.fov = fov;
+  camera.proj_fields.aspect = aspect;
+  camera.proj_fields.z_far = z_near;
+  camera.proj_fields.z_near = z_far;
+
+  // Set view matrix parameters
+  for (unsigned int i = 0; i < 3; i++) {
+    camera.view_fields.position[i] = position[i];   // Copy each position component
+    camera.view_fields.at[i] = at[i];   // Copy each at component
+    camera.view_fields.up[i] = up[i];   // Copy each up component
+  }
+
+  // Build matrices
+  glm_perspective(fov, aspect, z_near, z_far, camera.projection_matrix);
+  glm_lookat(position, at, up, camera.view_matrix);
+
+  // Return camera
+  return camera;
 }

@@ -16,5 +16,6 @@ in vec2 f_uv;
 // Uniforms
 
 void main() {
-
+  // Temporary
+  fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

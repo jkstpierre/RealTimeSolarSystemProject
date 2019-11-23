@@ -13,11 +13,18 @@
 // INCLUDES //
 
 #include "rtssp/scene.h"
+#include "rtssp/rtssp.h"
 
 
-// DATA //
+// LOCAL DATA //
 
-GLuint vao;   // The vertex array object 
+static GLuint vao;        // The vertex array object
+static GLuint program;    // The shader program
+
+
+// GLOBAL DATA //
+
+camera_t camera;    // The camera for our scene
 
 
 // FUNCTIONS //
@@ -25,7 +32,21 @@ GLuint vao;   // The vertex array object
 void initScene(void) {
   glGenVertexArrays(1, &vao); // Generate a vertex array object
 
+  // Build meshes and format them with the vao
 
+  // Compile and link shader program
+  program = compileAndLinkShaderProgram(SCENE_VERTEX_SHADER_DIR, SCENE_FRAGMENT_SHADER_DIR);
+
+  // Setup the camera
+  camera = buildCamera(
+    DEFAULT_CAMERA_FOV, 
+    (float)DEFAULT_WINDOW_WIDTH_PIXELS / (float)DEFAULT_WINDOW_HEIGHT_PIXELS,
+    DEFAULT_CAMERA_Z_NEAR,
+    DEFAULT_CAMERA_Z_FAR,
+    (vec3){0.0f, 0.0f, 0.0f},   // Start at center of the world coordinates
+    (vec3){0.0f, 0.0f, 1.0f},   // Look straight ahead
+    (vec3){0.0f, 1.0f, 0.0f}    // Up vector (shouldn't ever change)
+  );
 }
 
 void updateScene(float dt) {
@@ -51,7 +72,7 @@ void drawScene(float alpha) {
 }
 
 void freeScene(void) {
-
+  // Delete all the meshes and renderables
 
   glDeleteVertexArrays(1, &vao);  // Delete the vertex array object
 }

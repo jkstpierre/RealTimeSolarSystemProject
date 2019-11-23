@@ -19,9 +19,9 @@ out vec2 f_uv;        // Output fragment texture coords
 uniform mat4 MVP;   // The model-view-projection matrix
 
 void main() {
-  gl_Position = MVP * position;   // Compute the vertex position
+  gl_Position = MVP * vec4(position, 1.0f);   // Compute the vertex position
 
   // Forward normal vector and uv coords to the fragment shader
-  f_normal = normal
+  f_normal = normal;
   f_uv = uv;
 }

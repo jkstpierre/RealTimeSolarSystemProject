@@ -65,6 +65,37 @@ typedef struct {
   texture_t texture;    // The texture of the renderable
 } renderable_t;
 
+/**
+ * @brief A camera_t contains the projection and view matrices for a camera as well as the fields required for
+ * creating those matrices.
+ * 
+ */
+typedef struct {
+  mat4 projection_matrix;   // The projection matrix to be sent to the GPU. Will be set to a perspective mode.
+  mat4 view_matrix;         // The view matrix to be sent to the GPU for representing the camera's orientation.
+  
+  /**
+   * @brief Parameters for building a projection matrix
+   * 
+   */
+  struct {
+    float fov;      // The field of view
+    float aspect;   // The aspect ratio
+    float z_near;     // The near z clipping plane
+    float z_far;      // The far z clipping plane
+  } proj_fields;
+
+  /**
+   * @brief Parameters for building a view matrix
+   * 
+   */
+  struct {
+    vec3 position;  // The position of the camera
+    vec3 at;        // The position of the object to look at
+    vec3 up;        // The up vector for orienting the camera
+  } view_fields;
+} camera_t;
+
 
 // DATA //
 
@@ -76,24 +107,31 @@ typedef struct {
 // SHADER FUNCTIONS //
 
 /**
- * @brief Compiles a shader program from disk and returns a handle to it
- * 
- * @param shader_path   Path to the shader program on disk
- * @param type          The type of shader to compile
- * @return GLuint       Handle to the shader
- */
-extern GLuint compileShader(const char *shader_path, GLenum type);
-
-/**
- * @brief Compile and links a usable shader program
+ * @brief Compiles and links a usable shader program
  * 
  * @param vertex_shader_path    Path to the vertex shader program on disk
  * @param fragment_shader_path  Path to the fragment shader program on disk
- * @param geometry_shader_path  Path to the optional geometry shader program on disk
  * @return GLuint   The id of the shader program
  */
-extern GLuint compileAndLinkShaderPrograms(
-  const char *vertex_shader_path, const char *fragment_shader_path, const char *geometry_shader_path);
+extern GLuint compileAndLinkShaderProgram(const char *vertex_shader_path, const char *fragment_shader_path);
+
+/**
+ * @brief Send a vec4 to a uniform in a given shader program
+ * 
+ * @param program
+ * @param uniform_name 
+ * @param vector 
+ */
+extern void setUniformVec4(GLuint program, const char *uniform_name, vec4 vector);
+
+/**
+ * @brief Send a mat4 to a uniform in a given shader program
+ * 
+ * @param program
+ * @param uniform_name 
+ * @param matrix 
+ */
+extern void setUniformMat4(GLuint program, const char *uniform_name, mat4 matrix);
 
 // TEXTURE FUNCTIONS //
 
@@ -142,5 +180,20 @@ extern void freeMesh(mesh_t *mesh);
 // RENDERABLE FUNCTIONS //
 
 
+// CAMERA FUNCTIONS //
+
+/**
+ * @brief Build a new camera object
+ * 
+ * @param fov           The field of view of the camera
+ * @param aspect        The aspect ratio of the screen
+ * @param z_near         The near z-clipping plane
+ * @param z_far          The far z-clipping plane
+ * @param position      The position of the camera
+ * @param at            The position to look at
+ * @param up            The up vector to orient the camera by
+ * @return camera_t 
+ */
+extern camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 position, vec3 at, vec3 up);
 
 #endif

@@ -18,9 +18,19 @@
 #include "rtssp/graphics.h"
 
 
+// DEFINITIONS //
+
+#define DEFAULT_CAMERA_FOV      45.0f
+#define DEFAULT_CAMERA_Z_NEAR   0.1f
+#define DEFAULT_CAMERA_Z_FAR    10000000.0f
+
+#define SCENE_VERTEX_SHADER_DIR     "../res/shaders/scene/vertex.glsl"
+#define SCENE_FRAGMENT_SHADER_DIR   "../res/shaders/scene/fragment.glsl"
+
+
 // DATA //
 
-extern GLuint vao;    // The scene vertex array object
+extern camera_t camera;   // The camera for the scene
 
 
 // FUNCTIONS //
