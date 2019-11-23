@@ -16,6 +16,7 @@
 // INCLUDES //
 
 #include "rtssp/graphics.h"
+#include "rtssp/math.h"
 
 
 // DEFINITIONS //
@@ -26,6 +27,20 @@
 
 #define SCENE_VERTEX_SHADER_DIR     "../res/shaders/scene/vertex.glsl"
 #define SCENE_FRAGMENT_SHADER_DIR   "../res/shaders/scene/fragment.glsl"
+
+
+// STRUCTS //
+
+/**
+ * @brief A phys_object_t is any object that appears in our solar system whether it be a planet or a moon or the sun.
+ * 
+ */
+typedef struct {
+  renderable_t renderable;    // The renderable component (contains all the data for OpenGL to draw the phys_object_t)
+  highp_vec3 position;        // The position of the phys_object_t in high precision
+  highp_vec3 rotation;        // The rotation of the phys_object in high precision
+  double mass;    // The mass of the object
+} phys_object_t;
 
 
 // DATA //
