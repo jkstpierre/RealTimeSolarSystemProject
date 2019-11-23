@@ -115,7 +115,7 @@ GLuint compileAndLinkShaderProgram(const char *vertex_shader_path, const char *f
   glLinkProgram(program); // Link the vertex and fragment shaders
 
   // Check for linker error
-  glGetShaderiv(program, GL_LINK_STATUS, &success);
+  glGetProgramiv(program, GL_LINK_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(program, LOG_SIZE, NULL, error_log);   // Get the error
 
