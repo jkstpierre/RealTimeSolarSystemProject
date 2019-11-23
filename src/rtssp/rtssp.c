@@ -76,6 +76,9 @@ int main(int argc, char **args) {
   // Setup function callbacks
   glfwSetErrorCallback(processError);        // Error callback
   glfwSetKeyCallback(window, processInput);  // Input callback
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);  // Framebuffer size callback
+
+  // Enable OpenGL (TODO: )
   
   // Initialize the scene
   initScene();
@@ -120,6 +123,8 @@ int main(int argc, char **args) {
   return 0;
 }
 
+// CALLBACK FUNCTIONS //
+
 void processError(int error_code, const char *message) {
   fprintf(stdin, "Error:\nCode: %d\nMessage: %s\n", error_code, message);
   exit(EXIT_FAILURE);
@@ -132,3 +137,6 @@ void processInput(GLFWwindow *window, int key, int scancode, int action, int mod
   }
 }
 
+void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+  glViewport(0, 0, width, height);  // Update the viewport with the new screen dimensions
+}

@@ -33,6 +33,10 @@ void initScene(void) {
   glGenVertexArrays(1, &vao); // Generate a vertex array object
 
   // Build meshes and format them with the vao
+  glBindVertexArray(vao);   // Bind the vao state
+
+
+
 
   // Compile and link shader program
   program = compileAndLinkShaderProgram(SCENE_VERTEX_SHADER_DIR, SCENE_FRAGMENT_SHADER_DIR);
@@ -67,6 +71,7 @@ void drawScene(float alpha) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer and depth buffer
 
   glBindVertexArray(vao); // Bind the vao for drawing
+  glUseProgram(program);  // Use the shader program
 
 
 }
@@ -75,4 +80,5 @@ void freeScene(void) {
   // Delete all the meshes and renderables
 
   glDeleteVertexArrays(1, &vao);  // Delete the vertex array object
+  glDeleteProgram(program);   // Delete the program object
 }

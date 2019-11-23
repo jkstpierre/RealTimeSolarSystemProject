@@ -66,4 +66,13 @@ extern void processError(int error_code, const char *message);
  */
 extern void processInput(GLFWwindow *window, int key, int scancode, int action, int mods);
 
+/**
+ * @brief 
+ * 
+ * @param window 
+ * @param width 
+ * @param height 
+ */
+extern void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+
 #endif
