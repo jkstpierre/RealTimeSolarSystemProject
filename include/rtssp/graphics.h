@@ -61,8 +61,18 @@ typedef struct {
  */
 typedef struct {
   mesh_t mesh;          // The mesh for the renderable
-  mat4 model_matrix;    // The model matrix for the renderable
   texture_t texture;    // The texture of the renderable
+  mat4 model_matrix;    // The model matrix for the renderable
+
+  /**
+   * @brief The parameters used for building the model matrix
+   * 
+   */
+  struct {
+    vec3 position;    // The position vector 32 bit floats
+    vec3 rotation;    // The rotation vector 32 bit floats
+    vec3 scale;       // The scale vector 32 bit floats
+  } model_fields;
 } renderable_t;
 
 /**
@@ -83,7 +93,7 @@ typedef struct {
     float aspect;   // The aspect ratio
     float z_near;     // The near z clipping plane
     float z_far;      // The far z clipping plane
-  } proj_fields;
+  } projection_fields;
 
   /**
    * @brief Parameters for building a view matrix
@@ -145,8 +155,14 @@ extern void setUniformMat4(GLuint program, const char *uniform_name, mat4 matrix
  * @param mag_filter 
  * @return texture_t 
  */
-extern texture_t createTexture2DFromImage(
-  const char *filepath, GLint wrap_s, GLint wrap_t, GLint min_filter, GLint mag_filter);
+extern texture_t createTexture2DFromImage(const char *filepath, GLint wrap_s, GLint wrap_t, GLint min_filter, GLint mag_filter);
+
+/**
+ * @brief Free a texture from VRAM
+ * 
+ * @param texture 
+ */
+extern void freeTexture(texture_t *texture);
 
 // MESH FUNCTIONS //
 
@@ -179,6 +195,17 @@ extern void freeMesh(mesh_t *mesh);
 
 // RENDERABLE FUNCTIONS //
 
+/**
+ * @brief Build a new renderable object out of a mesh and texture.
+ * 
+ * @param mesh            The mesh to draw with the renderable
+ * @param texture         The texture to wrap around the mesh (if texture id is 0, texture is not used)
+ * @param position        The position of the renderable in world coordinates
+ * @param rotation        The rotation of the renderable in degrees (pitch, yaw, roll)
+ * @param scale           The scale of the renderable
+ * @return renderable_t   New renderable object
+ */
+extern renderable_t buildRenderable(mesh_t mesh, texture_t texture, vec3 position, vec3 rotation, vec3 scale);
 
 // CAMERA FUNCTIONS //
 

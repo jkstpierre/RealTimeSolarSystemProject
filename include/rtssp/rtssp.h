@@ -67,7 +67,7 @@ extern void processError(int error_code, const char *message);
 extern void processInput(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 /**
- * @brief 
+ * @brief Resize the viewport whenever screen dimensions change
  * 
  * @param window 
  * @param width 

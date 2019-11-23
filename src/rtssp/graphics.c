@@ -186,6 +186,16 @@ texture_t createTexture2DFromImage(
   return texture;   // Return the loaded texture
 }
 
+void freeTexture(texture_t *texture) {
+  // Reset the texture to its null state
+  if (texture) {
+    glDeleteTextures(1, &(texture->id));
+    texture->width = 0;
+    texture->height = 0;
+    texture->channels = 0;
+  }
+}
+
 // MESH FUNCTIONS //
 
 mesh_t buildSphereMesh(GLfloat radius, GLuint stacks, GLuint sectors) {
@@ -356,16 +366,36 @@ void freeMesh(mesh_t *mesh) {
 
 // RENDERABLE FUNCTIONS //
 
+renderable_t buildRenderable(mesh_t mesh, texture_t texture, vec3 position, vec3 rotation, vec3 scale) {
+  renderable_t renderable;
+
+  // Copy trivial data
+  renderable.mesh = mesh;
+  renderable.texture = texture;
+
+  // Copy vectors
+  for (unsigned int i = 0; i < 3; i++) {
+    renderable.model_fields.position[i] = position[i];
+    renderable.model_fields.rotation[i] = rotation[i];
+    renderable.model_fields.scale[i] = scale[i];
+  }
+
+  // Compute model matrix from position, rotation, and scale
+  
+
+  return renderable;
+}
+
 // CAMERA FUNCTIONS //
 
 camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 position, vec3 at, vec3 up) {
   camera_t camera;  // The camera to build
 
   // Set projection matrix parameters
-  camera.proj_fields.fov = fov;
-  camera.proj_fields.aspect = aspect;
-  camera.proj_fields.z_far = z_near;
-  camera.proj_fields.z_near = z_far;
+  camera.projection_fields.fov = fov;
+  camera.projection_fields.aspect = aspect;
+  camera.projection_fields.z_far = z_near;
+  camera.projection_fields.z_near = z_far;
 
   // Set view matrix parameters
   for (unsigned int i = 0; i < 3; i++) {
