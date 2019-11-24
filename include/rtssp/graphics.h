@@ -223,4 +223,27 @@ extern renderable_t buildRenderable(mesh_t mesh, texture_t texture, vec3 positio
  */
 extern camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 position, vec3 at, vec3 up);
 
+// MATRIX FUNCTIONS //
+
+/**
+ * @brief Build a model matrix out of the position, pivot, rotation, and scale of the object.
+ * 
+ * @param position  The position of the object
+ * @param pivot     The pivot for rotation and scaling
+ * @param rotation  The rotation of the object
+ * @param scale     The scale of the object
+ * @param model_matrix  The model matrix to build
+ */
+extern void buildModelMatrix(vec3 position, vec3 pivot, vec3 rotation, vec3 scale, mat4 model_matrix);
+
+/**
+ * @brief Build an mvp matrix to be sent off to the shader.
+ * 
+ * @param projection_matrix 
+ * @param view_matrix 
+ * @param model_matrix 
+ * @param mvp_matrix 
+ */
+extern void buildMVPMatrix(mat4 projection_matrix, mat4 view_matrix, mat4 model_matrix, mat4 mvp_matrix);
+
 #endif

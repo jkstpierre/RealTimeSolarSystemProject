@@ -35,7 +35,7 @@ void initScene(void) {
   // Build meshes and format them with the vao
   glBindVertexArray(vao);   // Bind the vao state
 
-
+  
 
 
   // Compile and link shader program

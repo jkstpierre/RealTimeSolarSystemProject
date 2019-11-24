@@ -26,7 +26,7 @@
 #define LOG_SIZE 512    // Allocate 512 bytes to logs
 
 
-// FUNCTIONS //
+// LOCAL FUNCTIONS //
 
 // SHADER FUNCTIONS //
 
@@ -92,6 +92,11 @@ static GLuint compileShader(const char *shader_path, GLenum type) {
 
   return shader;    // Return the shader
 }
+
+
+// GLOBAL FUNCTIONS //
+
+// SHADER FUNCTIONS //
 
 GLuint compileAndLinkShaderProgram(const char *vertex_shader_path, const char *fragment_shader_path) {
   // Assertions
@@ -381,7 +386,7 @@ renderable_t buildRenderable(mesh_t mesh, texture_t texture, vec3 position, vec3
   }
 
   // Compute model matrix from position, rotation, and scale
-  
+  buildModelMatrix(position, (vec3){0.0f, 0.0f, 0.0f}, rotation, scale, renderable.model_matrix);
 
   return renderable;
 }
@@ -410,4 +415,33 @@ camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 po
 
   // Return camera
   return camera;
+}
+
+// MATRIX FUNCTIONS //
+
+void buildModelMatrix(vec3 position, vec3 pivot, vec3 rotation, vec3 scale, mat4 model_matrix) {
+  vec3 combinedTranslation;   // The sum of position + pivot
+  glm_vec3_add(position, pivot, combinedTranslation);
+
+  glm_mat4_identity(model_matrix);  // Initialize identity matrix
+  glm_translate(model_matrix, combinedTranslation);   // Move to pos + pivot
+
+  // TODO: These rotation calculations might cause a gimbal lock, consider using quaternions
+  glm_rotate(model_matrix, glm_rad(rotation[1]), (vec3){0.0f, 1.0f, 0.0f}); // Rotate around y axis
+  glm_rotate(model_matrix, glm_rad(rotation[0]), (vec3){1.0f, 0.0f, 0.0f}); // Rotate around x axis
+  glm_rotate(model_matrix, glm_rad(rotation[2]), (vec3){0.0f, 0.0f, 1.0f}); // Rotate around z axis
+
+  glm_scale(model_matrix, scale); // Scale the matrix
+
+  vec3 inv;   // Vector to bring us back to position
+  glm_vec3_scale(pivot, -1.0f, inv);
+  glm_translate(model_matrix, inv); // Translate back to the position
+}
+
+void buildMVPMatrix(mat4 projection_matrix, mat4 view_matrix, mat4 model_matrix, mat4 mvp_matrix) {
+  mat4 view_projection_matrix;   // The combined projection and view matrices
+  
+  // Compute the mvp matrix
+  glm_mat4_mul(projection_matrix, view_matrix, view_projection_matrix);
+  glm_mat4_mul(view_projection_matrix, model_matrix, mvp_matrix); 
 }
