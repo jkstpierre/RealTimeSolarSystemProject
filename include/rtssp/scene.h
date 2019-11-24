@@ -47,6 +47,10 @@ typedef struct {
 
 extern camera_t camera;   // The camera for the scene
 
+// PHYSICS OBJECTS //
+
+extern phys_object_t sol;   // The sun
+
 
 // FUNCTIONS //
 
