@@ -68,6 +68,14 @@ extern void initScene(void);
 extern void updateScene(float dt);
 
 /**
+ * @brief Draw a renderable to the active framebuffer and handle interpolation.
+ * 
+ * @param renderable 
+ * @param alpha 
+ */
+extern void drawRenderable(renderable_t renderable, float alpha);
+
+/**
  * @brief Draw the scene to the screen using alpha interpolation
  * 
  * @param alpha 

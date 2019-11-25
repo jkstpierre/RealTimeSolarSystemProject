@@ -23,7 +23,7 @@
 
 // DEFINITIONS //
 
-#define LOG_SIZE 512    // Allocate 512 bytes to logs
+#define LOG_SIZE 512    // Allocate 512 bytes to error logs from OpenGL
 
 
 // LOCAL FUNCTIONS //
@@ -369,21 +369,31 @@ void freeMesh(mesh_t *mesh) {
   }
 }
 
+// INTERPOLATION FUNCTIONS //
+
+void interpolate(interpol_t state, float alpha, vec3 dest) {
+  // Interpolate between curr and prev
+  dest[0] = (state.curr[0] * alpha) + (state.prev[0] * (1.0f - alpha));
+  dest[1] = (state.curr[1] * alpha) + (state.prev[1] * (1.0f - alpha));
+  dest[2] = (state.curr[2] * alpha) + (state.prev[2] * (1.0f - alpha));
+}
+
 // RENDERABLE FUNCTIONS //
 
 renderable_t buildRenderable(mesh_t mesh, texture_t texture, vec3 position, vec3 rotation, vec3 scale) {
-  renderable_t renderable;
+  renderable_t renderable;  // The renderable to build
 
   // Copy trivial data
   renderable.mesh = mesh;
   renderable.texture = texture;
 
-  // Copy vectors
-  for (unsigned int i = 0; i < 3; i++) {
-    renderable.model_fields.position[i] = position[i];
-    renderable.model_fields.rotation[i] = rotation[i];
-    renderable.model_fields.scale[i] = scale[i];
-  }
+  // Copy vectors for the model matrix
+  glm_vec3_copy(position, renderable.model_fields.position.curr);
+  glm_vec3_copy(position, renderable.model_fields.position.prev);
+  glm_vec3_copy(rotation, renderable.model_fields.rotation.curr);
+  glm_vec3_copy(rotation, renderable.model_fields.rotation.prev);
+  glm_vec3_copy(scale, renderable.model_fields.scale.curr);
+  glm_vec3_copy(scale, renderable.model_fields.scale.prev);
 
   // Compute model matrix from position, rotation, and scale
   buildModelMatrix(position, (vec3){0.0f, 0.0f, 0.0f}, rotation, scale, renderable.model_matrix);
@@ -402,12 +412,11 @@ camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 po
   camera.projection_fields.z_far = z_near;
   camera.projection_fields.z_near = z_far;
 
-  // Set view matrix parameters
-  for (unsigned int i = 0; i < 3; i++) {
-    camera.view_fields.position[i] = position[i];   // Copy each position component
-    camera.view_fields.at[i] = at[i];   // Copy each at component
-    camera.view_fields.up[i] = up[i];   // Copy each up component
-  }
+  // Copy vectors for the view matrix
+  glm_vec3_copy(position, camera.view_fields.position.curr);
+  glm_vec3_copy(position, camera.view_fields.position.prev);
+  glm_vec3_copy(at, camera.view_fields.at);
+  glm_vec3_copy(up, camera.view_fields.up);
 
   // Build matrices
   glm_perspective(fov, aspect, z_near, z_far, camera.projection_matrix);

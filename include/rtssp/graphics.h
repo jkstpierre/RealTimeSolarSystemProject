@@ -1,7 +1,7 @@
 /**
  * @file graphics.h
  * @author Joseph St. Pierre
- * @brief This file contains the 
+ * @brief This file contains a suite of helper functions for rendering graphics
  * @version 0.1
  * @date 2019-11-20
  * 
@@ -56,6 +56,16 @@ typedef struct {
 } mesh_t;
 
 /**
+ * @brief An interpol_t stores a current and previous state in order to allow for 
+ * easy interpolation between the two with respect to an alpha value
+ * 
+ */
+typedef struct {
+  vec3 curr;    // The current state
+  vec3 prev;    // The previous state (duh)
+} interpol_t;
+
+/**
  * @brief A renderable_t points contains everything required to draw
  * a piece of geometry at a certain position and texture
  */
@@ -69,9 +79,9 @@ typedef struct {
    * 
    */
   struct {
-    vec3 position;    // The position vector 32 bit floats
-    vec3 rotation;    // The rotation vector 32 bit floats
-    vec3 scale;       // The scale vector 32 bit floats
+    interpol_t position;    // The position vector
+    interpol_t rotation;    // The rotation vector
+    interpol_t scale;       // The scale vector
   } model_fields;
 } renderable_t;
 
@@ -100,16 +110,11 @@ typedef struct {
    * 
    */
   struct {
-    vec3 position;  // The position of the camera
-    vec3 at;        // The position of the object to look at
-    vec3 up;        // The up vector for orienting the camera
+    interpol_t position;  // The position of the camera
+    vec3 at;              // The position of the object to look at
+    vec3 up;              // The up vector for orienting the camera
   } view_fields;
 } camera_t;
-
-
-// DATA //
-
-
 
 
 // FUNCTIONS //
@@ -192,6 +197,17 @@ extern mesh_t buildIcosphereMesh(GLfloat radius, GLuint subdivisions);
  * @param mesh 
  */
 extern void freeMesh(mesh_t *mesh);
+
+// INTERPOLATION FUNCTIONS //
+
+/**
+ * @brief Interpolate the given state with respect to alpha and store in dest
+ * 
+ * @param state   The state to interpolate
+ * @param alpha   The value to interpolate by
+ * @param dest    The output vector
+ */
+extern void interpolate(interpol_t state, float alpha, vec3 dest);
 
 // RENDERABLE FUNCTIONS //
 
