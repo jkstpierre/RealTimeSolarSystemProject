@@ -68,7 +68,9 @@ extern void initScene(void);
 extern void updateScene(float dt);
 
 /**
- * @brief Draw a renderable to the active framebuffer and handle interpolation.
+ * @brief Draw a renderable to the active framebuffer and handle interpolation. This function
+ * assumed a valid vao and shader are active and that renderable's vbo has been setup with the
+ * active vao.
  * 
  * @param renderable 
  * @param alpha 

@@ -60,6 +60,10 @@ void updateScene(float dt) {
    */
 }
 
+void drawRenderable(renderable_t renderable, float alpha) {
+  
+}
+
 void drawScene(float alpha) {
   /**
    * @brief Here OpenGL draws everything in the scene to the default framebuffer which will be
