@@ -45,6 +45,8 @@ typedef struct {
 
 // DATA //
 
+// CAMERA //
+
 extern camera_t camera;   // The camera for the scene
 
 // PHYSICS OBJECTS //

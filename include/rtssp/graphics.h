@@ -91,9 +91,8 @@ typedef struct {
  * 
  */
 typedef struct {
-  mat4 projection_matrix;   // The projection matrix to be sent to the GPU. Will be set to a perspective mode.
-  mat4 view_matrix;         // The view matrix to be sent to the GPU for representing the camera's orientation.
-  
+  mat4 view_projection_matrix;  // The combined view matrix and projection matrix
+
   /**
    * @brief Parameters for building a projection matrix
    * 
@@ -147,6 +146,15 @@ extern void setUniformVec4(GLuint program, const char *uniform_name, vec4 vector
  * @param matrix 
  */
 extern void setUniformMat4(GLuint program, const char *uniform_name, mat4 matrix);
+
+/**
+ * @brief Send an integer to a uniform in a given shader program
+ * 
+ * @param program 
+ * @param uniform_name 
+ * @param v 
+ */
+extern void setUniformInt(GLuint program, const char *uniform_name, int v);
 
 // TEXTURE FUNCTIONS //
 
@@ -251,15 +259,5 @@ extern camera_t buildCamera(float fov, float aspect, float z_near, float z_far, 
  * @param model_matrix  The model matrix to build
  */
 extern void buildModelMatrix(vec3 position, vec3 pivot, vec3 rotation, vec3 scale, mat4 model_matrix);
-
-/**
- * @brief Build an mvp matrix to be sent off to the shader.
- * 
- * @param projection_matrix 
- * @param view_matrix 
- * @param model_matrix 
- * @param mvp_matrix 
- */
-extern void buildMVPMatrix(mat4 projection_matrix, mat4 view_matrix, mat4 model_matrix, mat4 mvp_matrix);
 
 #endif

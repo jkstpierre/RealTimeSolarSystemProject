@@ -147,6 +147,10 @@ void setUniformMat4(GLuint program, const char *uniform_name, mat4 matrix) {
   glUniformMatrix4fv(glGetUniformLocation(program, uniform_name), 1, GL_FALSE, (GLfloat *)matrix);
 }
 
+void setUniformInt(GLuint program, const char *uniform_name, int v) {
+  glUniform1i(glGetUniformLocation(program, uniform_name), v);
+}
+
 // TEXTURE FUNCTIONS //
 
 texture_t createTexture2DFromImage(
@@ -187,6 +191,8 @@ texture_t createTexture2DFromImage(
 
   // Unbind the texture from tex unit 0 (technically not required but makes me rest easy)
   glBindTexture(GL_TEXTURE_2D, GL_NONE);
+
+  stbi_image_free(data);  // Free the image data to prevent a memory leak
 
   return texture;   // Return the loaded texture
 }
@@ -419,8 +425,14 @@ camera_t buildCamera(float fov, float aspect, float z_near, float z_far, vec3 po
   glm_vec3_copy(up, camera.view_fields.up);
 
   // Build matrices
-  glm_perspective(fov, aspect, z_near, z_far, camera.projection_matrix);
-  glm_lookat(position, at, up, camera.view_matrix);
+  mat4 projection_matrix;
+  mat4 view_matrix;
+
+  glm_perspective(fov, aspect, z_near, z_far, projection_matrix);
+  glm_lookat(position, at, up, view_matrix);
+
+  // View Projection matrix multiplication
+  glm_mat4_mul(projection_matrix, view_matrix, camera.view_projection_matrix);
 
   // Return camera
   return camera;
@@ -445,12 +457,4 @@ void buildModelMatrix(vec3 position, vec3 pivot, vec3 rotation, vec3 scale, mat4
   vec3 inv;   // Vector to bring us back to position
   glm_vec3_scale(pivot, -1.0f, inv);
   glm_translate(model_matrix, inv); // Translate back to the position
-}
-
-void buildMVPMatrix(mat4 projection_matrix, mat4 view_matrix, mat4 model_matrix, mat4 mvp_matrix) {
-  mat4 view_projection_matrix;   // The combined projection and view matrices
-  
-  // Compute the mvp matrix
-  glm_mat4_mul(projection_matrix, view_matrix, view_projection_matrix);
-  glm_mat4_mul(view_projection_matrix, model_matrix, mvp_matrix); 
 }

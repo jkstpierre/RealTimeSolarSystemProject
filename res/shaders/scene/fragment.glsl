@@ -14,8 +14,13 @@ in vec3 f_normal;
 in vec2 f_uv;
 
 // Uniforms
+uniform int use_texture;
+uniform sampler2D diffuse_map;
 
 void main() {
-  // Temporary
-  fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  // If no texture, just draw white fragments
+  if (use_texture == 0)
+    fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  else
+    fragment_color = texture(diffuse_map, f_uv);  // Sample from the diffuse_map
 }
