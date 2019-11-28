@@ -24,6 +24,38 @@ bool is_running = true;   // Program is running by default
 
 // FUNCTIONS //
 
+// LOCAL FUNCTIONS //
+
+/**
+ * @brief Initialize and prepare OpenGL for rendering. Return true on success, false on failure
+ * 
+ * @return true 
+ * @return false 
+ */
+bool initOpenGL() {
+  // Set the initial view port
+  glViewport(0, 0, DEFAULT_WINDOW_WIDTH_PIXELS, DEFAULT_WINDOW_HEIGHT_PIXELS);
+  if (glGetError() != GL_NO_ERROR) {
+    fprintf(stderr, "Failed to set the viewport!\n");
+    return false;
+  }
+
+  // Enable depth testing
+  glEnable(GL_DEPTH_TEST);
+  if (glGetError() != GL_NO_ERROR) {
+    fprintf(stderr, "Failed to enable depth testing!\n");
+    return false;
+  }
+
+  glEnable(GL_MULTISAMPLE); // Enable anti-aliasing
+  if (glGetError() != GL_NO_ERROR) {
+    fprintf(stderr, "Failed to enable multisample buffers!\n");
+    return false;
+  }
+
+  return true;
+}
+
 /**
  * @brief The main function is where program entry begins.
  * 

@@ -56,6 +56,21 @@ extern phys_object_t sol;   // The sun
 
 // FUNCTIONS //
 
+// PHYSICS OBJECT FUNCTIONS //
+
+/**
+ * @brief Build a physics object with a given renderable, starting position, starting rotation, and mass
+ * 
+ * @param renderable 
+ * @param position 
+ * @param rotation 
+ * @param mass 
+ * @return phys_object_t 
+ */
+extern phys_object_t buildPhysicsObject(renderable_t renderable, highp_vec3 position, highp_vec3 rotation, double mass);
+
+// SCENE  FUNCTIONS //
+
 /**
  * @brief Initialize the scene
  * 
@@ -71,7 +86,7 @@ extern void updateScene(float dt);
 
 /**
  * @brief Draw a renderable to the active framebuffer and handle interpolation. This function
- * assumed a valid vao and shader are active and that renderable's vbo has been setup with the
+ * assumes a valid vao and shader are active and that the renderable's vbo has been setup with the
  * active vao.
  * 
  * @param renderable 

@@ -17,6 +17,12 @@
 
 #include <cglm/cglm.h>
 
+
+// DEFINES //
+
+#define DEFAULT_HIGHP_TO_VEC3_SCALE_FACTOR      10000.0f    // Each unit in glm corresponds to 10000 units of highp
+
+
 // STRUCTS //
 
 /**

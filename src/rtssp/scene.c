@@ -29,6 +29,23 @@ phys_object_t sol;  // The sun at the center of the solar system
 
 // FUNCTIONS //
 
+// PHYSICS OBJECT FUNCTIONS //
+
+phys_object_t buildPhysicsObject(renderable_t renderable, highp_vec3 position, highp_vec3 rotation, double mass) {
+  /**
+   * @brief Here we construct a physics object like a planet or moon
+   * 
+   */
+
+  phys_object_t object;   // The object to build
+
+  
+
+  return object;    // Return the object
+}
+
+// SCENE FUNCTIONS //
+
 void initScene(void) {
   glGenVertexArrays(1, &vao); // Generate a vertex array object
 
