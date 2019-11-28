@@ -111,6 +111,9 @@ int main(int argc, char **args) {
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);  // Framebuffer size callback
 
   // Enable OpenGL (TODO: )
+  if (!initOpenGL()) {
+    exit(EXIT_FAILURE); // Terminate program if OpenGL failed to load
+  }
   
   // Initialize the scene
   initScene();

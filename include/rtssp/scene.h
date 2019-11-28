@@ -39,7 +39,7 @@ typedef struct {
   renderable_t renderable;    // The renderable component (contains all the data for OpenGL to draw the phys_object_t)
   highp_vec3 position;        // The position of the phys_object_t in high precision
   highp_vec3 rotation;        // The rotation of the phys_object in high precision
-  double mass;    // The mass of the object
+  double mass;                // The mass of the object
 } phys_object_t;
 
 
@@ -59,15 +59,19 @@ extern phys_object_t sol;   // The sun
 // PHYSICS OBJECT FUNCTIONS //
 
 /**
- * @brief Build a physics object with a given renderable, starting position, starting rotation, and mass
+ * @brief Build a physics object with a given mesh and texture, 
+ * starting position, starting rotation, scale, and mass
  * 
- * @param renderable 
+ * @param mesh
+ * @param texture
  * @param position 
  * @param rotation 
+ * @param scale
  * @param mass 
  * @return phys_object_t 
  */
-extern phys_object_t buildPhysicsObject(renderable_t renderable, highp_vec3 position, highp_vec3 rotation, double mass);
+extern phys_object_t buildPhysicsObject(
+  mesh_t mesh, texture_t texture, highp_vec3 position, highp_vec3 rotation, highp_vec3 scale, double mass);
 
 // SCENE  FUNCTIONS //
 

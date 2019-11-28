@@ -31,7 +31,8 @@ phys_object_t sol;  // The sun at the center of the solar system
 
 // PHYSICS OBJECT FUNCTIONS //
 
-phys_object_t buildPhysicsObject(renderable_t renderable, highp_vec3 position, highp_vec3 rotation, double mass) {
+phys_object_t buildPhysicsObject(
+  mesh_t mesh, texture_t texture, highp_vec3 position, highp_vec3 rotation, highp_vec3 scale, double mass) {
   /**
    * @brief Here we construct a physics object like a planet or moon
    * 
@@ -39,7 +40,16 @@ phys_object_t buildPhysicsObject(renderable_t renderable, highp_vec3 position, h
 
   phys_object_t object;   // The object to build
 
-  
+  // Construct the renderable for the phys object making sure to convert to rendering coordinatesh
+  vec3 glm_pos; convertHighPVector(&position, glm_pos, DEFAULT_HIGHP_TO_VEC3_SCALE_FACTOR);
+  vec3 glm_rot; convertHighPVector(&rotation, glm_rot, DEFAULT_HIGHP_TO_VEC3_SCALE_FACTOR);
+  vec3 glm_scl; convertHighPVector(&scale, glm_scl, DEFAULT_HIGHP_TO_VEC3_SCALE_FACTOR);
+  object.renderable = buildRenderable(mesh, texture, glm_pos, glm_rot, glm_scl);
+
+  // Copy position, rotation, and mass
+  object.position = position;
+  object.rotation = rotation;
+  object.mass = mass;
 
   return object;    // Return the object
 }
@@ -135,6 +145,9 @@ void drawScene(float alpha) {
 
   glBindVertexArray(vao); // Bind the vao for drawing
   glUseProgram(program);  // Use the shader program
+
+  // Draw the camera
+
 
   // Draw the sun
   drawRenderable(sol.renderable, alpha); 
