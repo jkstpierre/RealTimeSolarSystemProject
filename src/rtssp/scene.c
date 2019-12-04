@@ -24,6 +24,7 @@ static GLuint program;    // The shader program
 
 // GLOBAL DATA //
 
+mesh_t default_sphere;  // The sphere mesh for planets and suns etc.
 camera_t camera;    // The camera for our scene
 phys_object_t sol;  // The sun at the center of the solar system
 
@@ -62,7 +63,20 @@ void initScene(void) {
   // Build meshes and format them with the vao
   glBindVertexArray(vao);   // Bind the vao state
 
-  
+  default_sphere = buildSphereMesh(1.0f, 100, 100);   // Build a sphere of radius 1
+
+  // Format the mesh with the vbo
+  // Setup vertex attributes
+  glBindBuffer(GL_ARRAY_BUFFER, default_sphere.vbo);
+  // Position
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (GLvoid *)0);
+  glEnableVertexAttribArray(0);
+  // Normal
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (GLvoid *)offsetof(vertex_t, normal));
+  glEnableVertexAttribArray(1);
+  // Uv
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (GLvoid *)offsetof(vertex_t, uv));
+  glEnableVertexAttribArray(2);
 
 
   // Compile and link shader program
@@ -78,6 +92,9 @@ void initScene(void) {
     (vec3){0.0f, 0.0f, 1.0f},   // Look straight ahead
     (vec3){0.0f, 1.0f, 0.0f}    // Up vector (shouldn't ever change)
   );
+
+  // Build physics objects
+  
 }
 
 void updateScene(float dt) {

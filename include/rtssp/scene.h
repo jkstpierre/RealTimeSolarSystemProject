@@ -45,6 +45,10 @@ typedef struct {
 
 // DATA //
 
+// MESHES //
+
+extern mesh_t default_sphere; // The default sphere mesh
+
 // CAMERA //
 
 extern camera_t camera;   // The camera for the scene
